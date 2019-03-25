@@ -1,0 +1,4 @@
+username: labg103trg12
+pass: labg103oracle@orcl11g
+
+labg103trg12/labg103oracle@orcl11g

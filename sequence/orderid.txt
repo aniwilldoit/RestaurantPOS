@@ -1,0 +1,5 @@
+create sequence orderid
+start with 9750
+increment by 1
+maxvalue 12000
+nocycle;

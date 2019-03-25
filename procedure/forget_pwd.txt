@@ -1,0 +1,36 @@
+create or replace PROCEDURE forget_pass 
+IS
+
+username varchar2(30) :='&user_name';
+userphone varchar2(30) :='&user_contact';
+
+
+newpass varchar2(30) :='&New_Password';
+
+
+customerid number(30);
+
+cursor c1 is select cust_id from customer where ( cust_user=username and cust_phone=userphone);
+
+
+begin
+
+		open c1;
+		FETCH c1 INTO customerid;
+
+		if c1%FOUND
+		then
+
+			dbms_output.put_line('Updating Password....');
+			update customer
+			set cust_pass = newpass
+			where cust_id = customerid;
+			dbms_output.put_line('Password Updation successful');
+
+		else
+			dbms_output.put_line('Please Check The User Name and User Phone Number');
+		end if;
+		close c1;
+
+
+end ;

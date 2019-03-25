@@ -1,0 +1,21 @@
+create or replace PROCEDURE cust_history 
+IS
+
+cursor c1 is
+select distinct customer.cust_id, cust_name, cust_phone from customer, orders 
+having customer.cust_id(+) in orders.cust_id and order_date not in (sysdate,sysdate-30) and sum(bill_amount)>3000
+group by orders.cust_id, order_date,customer.cust_id, cust_name, cust_phone
+order by customer.cust_id
+;
+
+
+
+begin
+ 
+	for custrec in c1
+	loop
+		dbms_output.put_line(rpad(custrec.cust_id,8)||' '||rpad(custrec.cust_name,30)||' '||rpad(custrec.cust_phone,12));
+	end loop;
+
+
+end;

@@ -1,0 +1,25 @@
+501,butter chicken,600,Indian
+502,teekha murg,400,Indian
+503,kadhai mutton,500,Indian
+504,murg razela,300,Indian
+505,butter nan,60,Indian
+506,vegetable au gratin,250,continental
+507,irish chicken bangers,220,continental
+508,garlic prawn risotto,270,continental
+509,pizza,299,continental
+510,pasta,275,continental
+511,hakka noodles,300,chinese
+512,veg manchurian,199,chinese
+513,dimsums,365,chinese
+514,corn chicken soup,200,chinese
+515,chilli chicken,320,chinese
+516,chicken quesadillas,100,mexican
+517,guacamole,450,mexican
+518,tomato salsa,365,mexican
+519,guilt_free chili,400,mexican
+520,tacos,300,mexican
+521,brunswick stew,700,american
+522,chicken barbeque,899,american
+523,london broil,275,american
+524,tex-mex,320,american
+525,hamburger,400,american

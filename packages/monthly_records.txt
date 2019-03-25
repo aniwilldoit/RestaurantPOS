@@ -1,0 +1,120 @@
+create or replace package monthly_records
+as
+
+	function income_of_restaurant(resid number) return number;
+	procedure restaurant_income;
+	function sale_item(itemid number) return number;
+	procedure item_sale;
+	function bill_customer(custid number) return number;
+	procedure customer_bill;
+
+
+end monthly_records;
+
+********************************************************************************
+
+create or replace package body monthly_records
+is
+
+function income_of_restaurant(resid number) return number
+is
+	totalbill number;	
+begin
+	select sum(bill_amount)
+	into totalbill 
+	from orders 
+	where 	order_date between sysdate-30 and sysdate
+	and
+ 	res_id=resid
+	group by res_id;
+	return totalbill;
+end income_of_restaurant;
+
+
+procedure restaurant_income
+is 
+
+res_id number:=&Restaurat_ID;
+resincome number;
+
+startdate date;
+enddate date;
+
+begin
+
+startdate :=(sysdate-30);
+enddate :=sysdate;
+resincome:=monthly_records.income_of_restaurant(res_id);
+dbms_output.new_line();
+dbms_output.put_line('The total bill of the restaurant in the period'||' '||startdate||' to '||enddate||' '||'is: '||resincome);
+
+end restaurant_income;
+
+function sale_item(itemid number) return number
+is
+	count_item number;	
+begin
+	select count(*)
+	into count_item 
+	from orders 
+	where 	order_date between sysdate-30 and sysdate
+	and
+ 	item_id=itemid
+	group by item_id;
+	return count_item;
+end sale_item;
+
+procedure item_sale
+as
+
+item_id number:=&Item_ID;
+sale number;
+startdate date;
+enddate date;
+
+begin
+
+startdate :=(sysdate-30);
+enddate :=sysdate;
+
+sale:=monthly_records.sale_item(item_id);
+dbms_output.new_line();
+dbms_output.put_line('The number of time  the item was purchased in the period'||' '||startdate||' to '||enddate||' '||'is: '||sale);
+
+end item_sale;
+
+
+function bill_customer(custid number) return number
+is
+	total_bill number;	
+begin
+	select sum(bill_amount)
+	into total_bill 
+	from orders 
+	where 	order_date between sysdate-30 and sysdate
+	and
+ 	cust_id=custid
+	group by cust_id;
+	return total_bill;
+end bill_customer;
+
+
+procedure customer_bill
+as
+cust_id number:=&Cust_ID;
+bill number;
+startdate date;
+enddate date;
+
+begin
+
+startdate :=(sysdate-30);
+enddate :=sysdate;
+
+bill:=monthly_records.bill_customer(cust_id);
+dbms_output.new_line();
+dbms_output.put_line('The total bill by the customer in the period'||' '||startdate||' to '||enddate||' '||'is: '||bill);
+
+end customer_bill;
+
+end monthly_records;

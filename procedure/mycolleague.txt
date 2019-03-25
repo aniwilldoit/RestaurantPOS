@@ -1,0 +1,60 @@
+create or replace procedure mycolleague
+as
+
+user_name varchar2(30) :='&user_name';
+user_pass varchar2(30) :='&user_pass';
+
+		v_empid number(8);
+		v_empname varchar2(30);
+		v_empuser varchar2(30);
+		v_empphone number(12);
+		v_empsal number(8);
+		v_mgrid number(8);
+		v_deptid number(6);
+		v_resid number(6);
+resid number(6);
+login_problem exception;
+
+cursor c1 is select emp_id, emp_name, emp_user, emp_phone, emp_sal, mgr_id, dept_id, res_id from employees where res_id= (select res_id from employees where emp_user = user_name and emp_pass = user_pass);
+
+cursor c2 is select res_id from employees where (emp_user = user_name and emp_pass = user_pass);
+
+begin
+open c2;
+fetch c2 into resid;
+if c2%NOTFOUND
+then
+	raise login_problem;
+end if;
+close c2;
+	
+
+
+		dbms_output.put_line('Creating View...');
+	delete from backupmycolleague;
+	for emprec in c1
+	loop
+
+		v_empid :=emprec.emp_id;
+		v_empname :=emprec.emp_name;
+		v_empuser :=emprec.emp_user;
+		v_empphone :=emprec.emp_phone;
+		v_empsal :=emprec.emp_sal;
+		v_mgrid :=emprec.mgr_id;
+		v_deptid :=emprec.dept_id;
+		v_resid :=emprec.res_id;
+		
+		
+
+		insert into backupmycolleague
+			values (v_empid,v_empname,v_empuser,v_empphone,v_empsal,v_mgrid,v_deptid,v_resid);
+
+	end loop;
+		dbms_output.put_line('View Created');	
+
+exception
+
+when login_problem then
+dbms_output.put_line('Invalid User Name or Password!!!!');	
+
+end;

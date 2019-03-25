@@ -1,0 +1,5 @@
+create sequence empid
+start with 11910
+increment by 10
+maxvalue 13000
+nocycle;

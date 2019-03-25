@@ -1,0 +1,67 @@
+create or replace PROCEDURE insert_employee
+IS
+
+
+user_name varchar2(30) :='&user_name';
+user_pass varchar2(30) :='&user_pass';
+
+
+empname varchar2(30) :='&Employee_Name';
+empuser varchar2(30) :='&Employee_user';
+emppass varchar2(30) :='&Employee_Password';
+empphone number(12) :=&Employee_Phone;
+empsal number(8) :=&Employee_Salary;
+empdoj date :='&Employee_Hiredate';
+mgrid number(6) :=&Manager_ID;
+deptid number(8) :=&Department_ID;
+resid number(5) :=&Restaurant_ID;
+empeid number(8);
+
+employeeuser varchar2(30);
+employeeid number(6);
+employeephone number(12);
+employeename varchar2(30);
+employee_user varchar2(30);
+
+
+login_problem exception;
+
+cursor c1 is select emp_id,emp_user, emp_phone from employees where ( emp_user=empuser or emp_phone=empphone);
+cursor c2 is select emp_name, emp_user from employees where (emp_user=user_name and emp_pass=user_pass and (dept_id=7895 or dept_id=7896));
+
+begin
+open c2;
+FETCH c2 INTO employeename,employee_user;
+if c2%FOUND
+then
+		open c1;
+		FETCH c1 INTO employeeid,employeeuser,employeephone;
+
+			if c1%NOTFOUND
+			then
+				empeid :=empid.NEXTVAL;
+				dbms_output.put_line('Inserting Record....');
+				insert into employees
+				values(empeid,empname,empuser,emppass,empphone,empsal,empdoj,mgrid,deptid,resid);
+				dbms_output.put_line('Record Inserted');
+			else
+				dbms_output.put_line('Record Insert Fail Due to Uniqueness');
+			end if;
+		close c1;
+
+else
+	raise login_problem;
+
+end if;
+close c2;
+
+exception
+
+when login_problem then
+dbms_output.put_line('Access Violation');
+dbms_output.put_line('Invalid User Name or Password!!!!');
+insert into accesslog
+	values(user_name,user_pass,'Inserting Employee',systimestamp);
+
+
+end insert_employee;

@@ -1,0 +1,23 @@
+
+create or replace trigger secure_employees
+before insert or delete or update on employees
+for each row
+
+begin
+ 	if inserting then
+		dbms_output.put_line('Employee record inserted in Employees');
+		insert into emplog 
+			values(:new.emp_id,:new.emp_name,:new.emp_user,:new.emp_phone,systimestamp);
+	end if;
+	if updating then
+		dbms_output.put_line('Employee record updating in Employees');
+		insert into emplog 
+			values(:old.emp_id,:old.emp_name,:old.emp_user,:old.emp_phone,systimestamp);
+	end if;
+	if deleting then
+		dbms_output.put_line('Employee record deleting from Employees');
+		insert into emplog 
+			values(:old.emp_id,:old.emp_name,:old.emp_user,:old.emp_phone,systimestamp);
+	end if;
+
+end;

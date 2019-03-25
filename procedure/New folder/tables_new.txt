@@ -1,0 +1,129 @@
+DROP TABLE restaurants;
+DROP TABLE employees;
+DROP TABLE items;
+DROP TABLE customer;
+DROP TABLE departments;
+DROP TABLE reservations;
+DROP TABLE orders;
+
+
+ CREATE TABLE restaurants
+     ( res_id    NUMBER(4) PRIMARY KEY,
+       res_name     VARCHAR2(30)
+             CONSTRAINT     res_name_nn  NOT NULL,
+       res_add          varchar2(20),
+       res_phone        number(11)
+     CONSTRAINT     res_phone_nn  NOT NULL,
+       res_mail         varchar2(30)
+     CONSTRAINT     res_mail_nn  NOT NULL
+     );
+
+
+CREATE TABLE employees
+    ( emp_id     NUMBER(6) PRIMARY KEY,
+      emp_name   VARCHAR2(20)
+            CONSTRAINT     emp_nm_nn  NOT NULL,
+      emp_user   VARCHAR2(20)
+            CONSTRAINT     emp_usr_nn  NOT NULL,
+      emp_pass   VARCHAR2(20)
+            CONSTRAINT     emp_pss_nn  NOT NULL,
+      emp_phone  NUMBER(11)
+   CONSTRAINT     emp_phne_nn  NOT NULL,
+      emp_sal    NUMBER(8,2),
+      emp_doj    DATE
+   CONSTRAINT     emp_doj_nn  NOT NULL,
+      mgr_id     NUMBER(6),
+      dept_id    NUMBER(4),
+      res_id     NUMBER(4),
+      FOREIGN KEY (res_id) REFERENCES restaurants(res_id),
+     CONSTRAINT     emp_usr_uk
+                     UNIQUE (emp_user), 
+     CONSTRAINT     emp_sl_min
+                     CHECK (emp_sal > 0),
+     CONSTRAINT     emp_phn_uk
+                     UNIQUE (emp_phone)
+    );
+
+
+
+
+CREATE TABLE departments
+    ( dept_id     NUMBER(6) PRIMARY KEY,
+      dept_name   VARCHAR2(20)
+            CONSTRAINT     dept_name_nn  NOT NULL
+    );
+
+
+CREATE TABLE customer(
+      cust_id 	NUMBER(6)  PRIMARY KEY,
+      cust_name      VARCHAR2(20)  
+	CONSTRAINT 		cust_name_nn  NOT NULL,
+      cust_user   VARCHAR2(20)
+            CONSTRAINT     emp_user_nn  NOT NULL,
+      cust_pass   VARCHAR2(20)
+            CONSTRAINT     emp_pass_nn  NOT NULL,
+      cust_phone 	NUMBER(6),
+      cust_address	VARCHAR2(20),
+        CONSTRAINT     cust_user_uk
+                     UNIQUE (cust_user),
+        CONSTRAINT     emp_phone_uk
+                     UNIQUE (cust_phone)
+);
+
+
+CREATE TABLE items
+	(item_id NUMBER(6) PRIMARY KEY,
+	 item_name VARCHAR2(30)
+	    	CONSTRAINT item_name_nn NOT NULL,
+         item_price NUMBER(6)    
+        	CONSTRAINT item_price_nn NOT NULL,
+	 item_type VARCHAR2(20)
+	);
+
+
+
+CREATE TABLE reservations
+	(rev_id NUMBER(6) PRIMARY KEY,
+	 rev_date   	  DATE
+	   CONSTRAINT rev_date_nn NOT NULL,
+	 tab_no        NUMBER(6)
+	   CONSTRAINT tab_no_nn NOT NULL,
+	 no_of_person  NUMBER(6)
+	   CONSTRAINT no_of_person_nn NOT NULL,
+	 res_id     NUMBER(4),
+	 cust_id    NUMBER(4),
+		FOREIGN KEY (res_id) REFERENCES restaurants(res_id),
+	 	FOREIGN KEY (cust_id) REFERENCES customer(cust_id)
+);
+
+
+
+
+
+
+
+CREATE TABLE orders(
+	order_id NUMBER(6) PRIMARY KEY,
+	order_date  DATE
+                CONSTRAINT order_date_nn  NOT NULL,
+	order_qty  NUMBER(6)
+		CONSTRAINT order_qty_nn  NOT NULL,
+	bill_amount  NUMBER(6)
+		CONSTRAINT bill_amt_nn  NOT NULL,
+	order_type   VARCHAR2(20)
+           CONSTRAINT order_type_nn  NOT NULL,
+	item_id      NUMBER(4)
+		CONSTRAINT item_id1_nn  NOT NULL,
+	res_id	     NUMBER(4)
+		CONSTRAINT res_id1_nn  NOT NULL,
+	cust_id      NUMBER(5)
+		CONSTRAINT cust_id1_nn  NOT NULL,
+	mgr_id       NUMBER(5)
+		CONSTRAINT mgr_id  NOT NULL,
+	FOREIGN KEY (item_id) REFERENCES items(item_id),
+	FOREIGN KEY (res_id) REFERENCES restaurants(res_id),
+	FOREIGN KEY (cust_id) REFERENCES customer(cust_id),
+	FOREIGN KEY (mgr_id) REFERENCES employees(emp_id)
+);
+
+

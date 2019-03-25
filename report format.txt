@@ -1,0 +1,56 @@
+
+	COLUMN res_id		HEADING 'Rest ID'
+	COLUMN res_name		HEADING 'Rest Name' 		FORMAT a20
+	COLUMN res_add		HEADING 'Address' 		FORMAT a10
+	COLUMN res_phone	HEADING 'Contact' 		
+	COLUMN res_mail		HEADING 'Rest Email' 		FORMAT a25
+	
+	COLUMN emp_id		HEADING 'Emp ID' 
+	COLUMN emp_name		HEADING 'Employee Name'		FORMAT a22
+	COLUMN emp_user		HEADING 'User Name' 		FORMAT a22
+	COLUMN emp_pass		HEADING 'User Password' 	FORMAT a22
+	COLUMN emp_phone	HEADING 'Contact' 
+	COLUMN emp_sal		HEADING 'Salary' 
+	COLUMN emp_doj		HEADING 'Hiredate' 			
+	COLUMN mgr_id		HEADING 'Manager ID' 
+		
+	COLUMN dept_id		HEADING 'Dept ID' 
+	COLUMN dept_name	HEADING 'Department Name' 	FORMAT a16
+
+
+	COLUMN cust_id		HEADING 'Cust ID' 	
+	COLUMN cust_name	HEADING 'Customer Name' 	FORMAT a22
+	COLUMN cust_user	HEADING 'Customer User' 	FORMAT a22
+	COLUMN cust_pass	HEADING 'Customer Pass' 	FORMAT a22
+	COLUMN cust_phone	HEADING 'Cust Contact'
+	COLUMN cust_address	HEADING 'Customer Address' 	FORMAT a18 		
+
+	COLUMN item_id		HEADING 'Item ID' 
+	COLUMN item_name	HEADING 'Item Name' 		FORMAT a22
+	COLUMN item_price	HEADING 'Price' 
+	COLUMN item_type	HEADING 'Type' 			FORMAT a15
+
+	COLUMN rev_id		HEADING 'Reservation ID'
+	COLUMN rev_date		HEADING 'Date' 
+	COLUMN no_of_person	HEADING 'Total Persons'
+
+	COLUMN order_id		HEADING 'Order ID'
+	COLUMN order_date	HEADING 'Date'
+	COLUMN order_qty	HEADING 'Quantity'
+	COLUMN bill_amount	HEADING 'Bill Amount'
+	COLUMN order_type	HEADING 'Order Type' 		FORMAT a10
+
+	COLUMN user_id		HEADING 'User ID' 
+	COLUMN user_pass	HEADING 'User Password' 	FORMAT a22
+	COLUMN action		HEADING 'Action' 		FORMAT a15
+	COLUMN time		HEADING 'Time' 						
+	
+	COLUMN employee_id	HEADING 'Emp ID' 
+	COLUMN employee_name	HEADING 'Employee Name'		FORMAT a22
+	COLUMN employee_user	HEADING 'User Name' 		FORMAT a22
+	COLUMN employee_phone	HEADING 'Contact' 
+	COLUMN manager_id	HEADING 'Manager' 
+	COLUMN department_id	HEADING 'Department' 
+	COLUMN restaurant_id	HEADING 'Restaurant' 
+	
+	set underline '=' 

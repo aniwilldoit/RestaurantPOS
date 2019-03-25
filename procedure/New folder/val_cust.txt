@@ -1,0 +1,16 @@
+create or replace procedure val_cust
+as
+
+cursor c1 is
+select distinct cust_name,cust_address,cust_phone from customer natural join orders
+where cust_id in (select cust_id from orders having sum(bill_amount)>3000
+group by cust_id);
+
+begin
+ 	for custrec in c1
+loop
+		dbms_output.put_Line(custrec.cust_name ||' ' || custrec.cust_address || ' ' || custrec.cust_phone);
+end loop;
+
+end;
+

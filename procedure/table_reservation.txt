@@ -1,0 +1,72 @@
+create or replace procedure table_reservation
+is
+
+
+user_name varchar2(30) :='&User_Name';
+password varchar2(12) :='&User_Password';
+
+revdate date :='&Reservation_Date';
+persons number(3) :=&No_of_Person;
+
+resvid number(7);
+
+place varchar2(15) :='&Place';
+
+username varchar2(30);
+custid number;
+--tablenum number(4);
+--resid number(5);
+restid number(5);
+--maxtabno number(2);
+
+login_problem exception;
+
+cursor c1 is select cust_id,cust_user from customer where ( cust_user=user_name and cust_pass=password);
+
+cursor c3 is select res_id from restaurants where res_add=place;
+
+begin
+open c1;
+FETCH c1 INTO custid,username;
+
+if c1%FOUND
+then
+	open c3;
+	FETCH c3 into restid;
+	if c3%FOUND
+	then
+	
+		if (revdate < sysdate or revdate > (sysdate+30) )
+		then
+			dbms_output.put_line('You can only reserve for the next 30 days');
+		else
+				resvid :=revid.NEXTVAL;
+				insert into reservations
+					values(resvid,revdate,persons,restid,custid);
+				dbms_output.put_line('Your booking is Successfully placed...');
+				dbms_output.put_line('Reservation ID is : '||resvid);
+
+
+		end if;
+	else
+
+		dbms_output.put_line('Location not available for the reservation');
+	end if;
+	close c3;
+else
+	raise login_problem;
+
+end if;
+close c1;
+
+
+
+exception
+
+
+when login_problem then
+dbms_output.put_line('Invalid User Name or Password!!!!');
+dbms_output.put_line('You are not a registered customer!!! To register please type @cust_registrations.sql');
+
+end;
+

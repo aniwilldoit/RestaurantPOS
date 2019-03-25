@@ -1,0 +1,116 @@
+create or replace package monthly_stat
+as
+	procedure valued_customers;
+	procedure valued_item;
+	procedure valued_restaurant_by_visit;
+	procedure order_restaurant_by_income;
+
+end monthly_stat;
+
+*******************************************************************************************************************************
+
+create or replace package body monthly_stat
+as
+
+PROCEDURE valued_customers 
+IS
+
+
+cursor c1 is
+select distinct cust_name,cust_address,cust_phone from customer natural join orders
+where cust_id in ((select cust_id from orders having order_date between sysdate-30 and sysdate and sum(bill_amount)>4000 group by cust_id,order_date));
+
+
+
+
+begin
+ 
+	dbms_output.put_Line(rpad('Name',25) ||'   '|| rpad('Address',10) ||'      '|| rpad('Contact',12));
+	for custrec in c1
+	loop
+		dbms_output.put_Line(rpad(custrec.cust_name,25) ||'   '|| rpad(custrec.cust_address,10) ||'      '|| custrec.cust_phone);
+	end loop;
+
+end valued_customers;
+
+
+PROCEDURE valued_item 
+IS
+
+cursor c1 is
+select item_id, item_name, item_type from items where item_id=(select item_id
+from orders
+where order_date between sysdate-30 and sysdate
+having count(item_id) =(select max(count(item_id)) from orders where order_date between sysdate-30 and sysdate group by item_id) group by item_id);
+
+begin
+ 
+	dbms_output.put_Line(rpad('Item ID',10) ||'   '|| rpad('Item Name',30) ||'      '|| rpad('Item Type',30));
+	for itemrec in c1
+	loop
+		dbms_output.put_Line(rpad(itemrec.item_id,10) ||'   '|| rpad(itemrec.item_name,30) ||'      '||rpad(itemrec.item_type,30) );
+	end loop;
+
+end valued_item;
+
+
+
+
+PROCEDURE valued_restaurant_by_visit
+IS
+
+cursor c1 is
+select res_id, res_name, res_add, res_phone from restaurants where res_id=(select res_id
+from orders
+where order_date between sysdate-30 and sysdate
+having count(res_id) =(select max(count(res_id)) from orders where order_date between sysdate-30 and sysdate group by res_id) group by res_id);
+
+begin
+ 
+	dbms_output.put_Line(rpad('Restaurant ID',10) ||' '|| rpad('Restaurant Name',15) ||' '|| rpad('Address',10)||' '||rpad('Phone', 15));
+	for restrec in c1
+	loop
+		dbms_output.put_Line(rpad(restrec.res_id,10) ||' '|| rpad(restrec.res_name,15) ||' '||rpad(restrec.res_add,10)||' '||rpad(restrec.res_phone,12));
+	end loop;
+
+end valued_restaurant_by_visit;
+
+
+
+PROCEDURE order_restaurant_by_income 
+IS
+
+cursor c1 is
+select res_id
+from orders
+where order_date between sysdate-30 and sysdate
+having sum(bill_amount)in(
+		select sum(bill_amount) 
+		from orders 
+		where order_date between sysdate-30 and sysdate
+		group by res_id 
+			)
+group by res_id
+order by sum(bill_amount) desc;
+
+cursor c2 is select * from restaurants;
+
+
+begin
+ 
+--dbms_output.put_line(rpad(rpad('Restaurant ID',8)||' '||rpad('Restaurant Name',20)||' '||rpad('Address',10)||' '||rpad('Contact',15));
+for restrec in c1
+	loop
+	for restrec1 in c2
+	loop
+		if(restrec.res_id=restrec1.res_id)
+		then
+			dbms_output.put_line(rpad(restrec1.res_id,8)||' '||rpad(restrec1.res_name,20)||' '||rpad(restrec1.res_add,10)||' '||rpad(restrec1.res_phone,15));
+		end if;
+	end loop;
+end loop;
+
+
+end order_restaurant_by_income;
+
+end;

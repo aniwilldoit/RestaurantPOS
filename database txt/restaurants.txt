@@ -1,0 +1,5 @@
+1001,chillies kolkata,kolkata,223654789,chillieskolkata@gmail.com
+1002,chillies pune,pune,223214587,chilliespune@gmail.com
+1003,chillies mumbai,mumbai,221345785,chilliesmumbai@gmail.com
+1004,chillies bangalore,bangalore,369874525,chilliesbangalore@gmail.com
+1005,chillies hyderabad,hyderabad,229874563,chillieshyderabad@gmail.com

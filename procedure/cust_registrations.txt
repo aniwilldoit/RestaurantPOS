@@ -1,0 +1,50 @@
+create or replace procedure customer_registration
+is
+
+
+user_name varchar2(30) :='&user_name';
+user_phone number(12) :='&user_phone';
+username varchar2(30);
+userphone number(12);
+
+cust_insert_user exception;
+cust_insert_phone exception;
+
+cursor c1 is select cust_user from customer where cust_user=user_name;
+cursor c2 is select cust_phone from customer where cust_phone=user_phone;
+
+begin
+open c1;
+FETCH c1 INTO username;
+
+if c1%FOUND
+then
+	raise cust_insert_user;
+else
+
+	open c2;
+	FETCH c2 INTO userphone;
+	if c2%FOUND
+	then
+		raise cust_insert_phone;
+	else
+		insert into customer
+			values (custid.NEXTVAL,'&cust_name',user_name,'&cust_pass',user_phone,'&cust_address');
+		dbms_output.put_line('Customer registration is successful');
+	end if;
+	
+	close c2;
+end if;
+close c1;
+
+exception
+
+when cust_insert_user then
+dbms_output.put_line('Your User Name must be Unique');
+dbms_output.put_line('Please register with different User Name');
+
+when cust_insert_phone then
+dbms_output.put_line('Your mobile no is already registered');
+
+end;
+

@@ -1,0 +1,61 @@
+create or replace PROCEDURE update_salary 
+IS
+
+
+user_name varchar2(30) :='&user_name';
+user_pass varchar2(30) :='&user_pass';
+
+empuser varchar2(30) :='&Employee_user';
+empsal number(8) :=&Employee_Salary;
+
+newsal number(8) :=&New_Salary;
+
+
+employeeid number(6);
+employeename varchar2(30);
+employeeuser varchar2(30);
+
+
+login_problem exception;
+
+cursor c1 is select emp_id from employees where ( emp_user=empuser and emp_sal=empsal);
+cursor c2 is select emp_name, emp_user from employees where (emp_user=user_name and emp_pass=user_pass and (dept_id=7895 or dept_id=7896));
+
+BEGIN
+
+open c2;
+FETCH c2 INTO employeename,employeeuser;
+if c2%FOUND
+then
+		open c1;
+		FETCH c1 INTO employeeid;
+
+		if c1%FOUND
+		then
+
+			dbms_output.put_line('Updating Salary....');
+			update employees
+			set emp_sal = newsal
+			where emp_id = employeeid;
+			dbms_output.put_line('Salary Updated....'||'OLD SALARY: '||empsal||' '||'NEW SALARY: '||newsal);
+
+		else
+			dbms_output.put_line('Please Check The User Name and Old Salary');
+		end if;
+		close c1;
+else
+	raise login_problem;
+
+end if;
+close c2;
+
+exception
+
+when login_problem then
+dbms_output.put_line('Access Violation');
+dbms_output.put_line('Invalid User Name or Password!!!!');
+insert into accesslog
+	values(user_name,user_pass,'Updating Salary',systimestamp);
+
+
+end update_salary;

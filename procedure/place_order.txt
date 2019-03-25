@@ -1,0 +1,82 @@
+create or replace procedure place_order
+is
+
+
+user_name varchar2(30) :='&User_Name';
+password varchar2(12) :='&User_Password';
+odid number(6);
+orderdate date :=SYSDATE;
+orderqty number(3) :='&Quantity';
+billamount number(8);
+ordertype varchar2(6) :='&Order_Type';
+itemid number(4) :=&Item_ID;
+place varchar2(15) :='&Place';
+
+username varchar2(30);
+custid number;
+itemprice number(4);
+resid number(5);
+
+item_notfound exception;
+login_problem exception;
+
+cursor c1 is select cust_id,cust_user from customer where ( cust_user=user_name and cust_pass=password);
+cursor c2 is select item_price from items where item_id=itemid;
+cursor c3 is select res_id from restaurants where res_add=place;
+
+begin
+open c1;
+FETCH c1 INTO custid,username;
+
+if c1%FOUND
+then
+	open c2;
+	FETCH c2 into itemprice;
+	if c2%FOUND
+	then
+		billamount :=orderqty*itemprice;
+		open c3;
+		FETCH c3 into resid;
+		if c3%FOUND
+		then
+			--if (orderdate=sysdate)
+			--then
+				if(ordertype='online' OR ordertype='walkin' )
+				then
+					odid :=orderid.NEXTVAL
+					insert into orders 
+						values(odid,orderdate,orderqty,billamount,ordertype,itemid,resid,custid);
+					dbms_output.put_line('Order Successfully Placed');
+					dbms_output.put_line('Your Order ID is: '||odid);
+				else
+					dbms_output.put_line('Invalid Order Type');
+				end if;
+			--else
+				--dbms_output.put_line('Invalid Date');
+			--end if;
+		else
+			dbms_output.put_line('Location not available for placing order');
+		end if;
+		close c3;
+	else
+		raise item_notfound;
+	end if;
+	close c2;
+
+else
+	raise login_problem;
+end if;
+close c1;
+
+
+exception
+
+when item_notfound then
+dbms_output.put_line('Please Fill the Item ID Correctly');
+
+when login_problem then
+dbms_output.put_line('Invalid User Name or Password!!!!');
+dbms_output.put_line('You are not a registered customer!!! To register please type @cust_registrations.sql');
+
+end;
+

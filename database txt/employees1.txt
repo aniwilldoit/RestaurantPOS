@@ -1,0 +1,5 @@
+insert into employees(emp_id,emp_name,emp_user,emp_pass,emp_phone,emp_sal,emp_doj,mgr_id,dept_id)
+ values(10002,'ABHINANDAN DEY','abhinandandey','sample1234',9038679357,60000,'12-Oct-06',10001,7896)
+
+insert into employees(emp_id,emp_name,emp_user,emp_pass,emp_phone,emp_sal,emp_doj,dept_id)
+ values(10001,'ABHRA PAUL','abhrapaul','sample1234',9674341214,60000,'12-Oct-06',7895)
